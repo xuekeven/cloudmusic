@@ -1,28 +1,82 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="contain-top">
+    <HeaderMenu />
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HeaderMenu from "./components/headers/Header.vue";
+import { mapMutations } from "vuex";
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+    HeaderMenu
+  },
+  created() {
+    // 页面重构前获取本地保存的信息
+    // 获取本地专辑 id
+    this.albumIdMutations(JSON.parse(window.sessionStorage.getItem("albumId")));
+    // 获取本地歌手 id
+    this.singerIdMutations(JSON.parse(window.sessionStorage.getItem("singerId")));
+    // 获取本地歌单 id
+    this.playListIdMutations(JSON.parse(window.sessionStorage.getItem("playListId")));
+    // 获取本地用户信息
+    this.profileMutations(JSON.parse(window.sessionStorage.getItem("profile")));
+    // 获取本地歌曲 id
+    this.SongIdMutations(JSON.parse(window.sessionStorage.getItem("songId")));
+    // 获取本地当前播放音乐地址
+    if (window.localStorage.getItem("musicUrl")) {
+      this.updataMusicUrl(JSON.parse(window.localStorage.getItem("musicUrl")));
+    }
+    // 获取本地音乐播放列表歌曲 id
+    if (window.localStorage.getItem("musicPlayListId")) {
+      this.updataMusicPlayListId(JSON.parse(window.localStorage.getItem("musicPlayListId")));
+    }
+    // 获取本地当前播放歌曲详情
+    if (window.localStorage.getItem("currentMusicInfo")) {
+      this.songDetMutations(JSON.parse(window.localStorage.getItem("currentMusicInfo")));
+    }
+    // 获取本地 mv id
+    if (window.sessionStorage.getItem("mvId")) {
+      this.mvIdMutations(JSON.parse(window.sessionStorage.getItem("mvId")));
+    }
+    // 获取本地搜索信息
+    if(window.sessionStorage.getItem('searchValue')){
+      this.searchValueMutations(JSON.parse(window.sessionStorage.getItem('searchValue')))
+    }
+    // 获取本地当前导航菜单的 index
+    if (window.sessionStorage.getItem("activeIndex") === null) {
+      this.$store.state.activeIndex = "/home";
+    } else {
+      this.$store.state.activeIndex = window.sessionStorage.getItem("activeIndex");
+    }
+  },
+  methods: {
+    ...mapMutations([ 
+      "profileMutations", 
+      "albumIdMutations", 
+      "singerIdMutations", 
+      "playListIdMutations", 
+      "SongIdMutations", 
+      "updataMusicUrl", 
+      "updataMusicPlayListId", 
+      "mvIdMutations", 
+      "songDetMutations", 
+      "searchValueMutations"
+    ]),
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="less">
+.contain-top {
+  height: 100%;
+  overflow-x: hidden;
+}
+.icon-huidaodingbu {
+  font-size: 50px !important;
 }
 </style>
